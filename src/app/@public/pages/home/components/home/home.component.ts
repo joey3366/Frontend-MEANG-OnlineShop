@@ -1,4 +1,6 @@
+import { ApiService } from './../../../../../@graphql/services/api.service';
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private api: ApiService, private auth: AuthService){ }
 
   ngOnInit(): void {
   }
