@@ -1,0 +1,106 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg"></div>
+    <div class="col-lg-6">
+      <form (ngSubmit)="add()" #forma="ngForm">
+        <h1>Registro de usuario</h1>
+        <p>
+          Rapido Y Sencillo
+        </p>
+        <hr />
+        <label for="name"><b>Nombre</b></label>
+        <input
+          type="text"
+          placeholder="Introduce Nombre"
+          name="name"
+          #name="ngModel"
+          [(ngModel)]="register.name"
+          class="form-control"
+          [ngClass]="{'is-valid': name.valid, 'is-invalid': name.invalid}"
+          required
+        />
+        <div class="alert alert-danger" role="alert" *ngIf="name.invalid && (name.dirty || name.touched)">
+          <div *ngIf="name.errors.required">
+            Introduce tu nombre
+          </div>
+        </div>
+        <label for="lastname"><b>Apellido</b></label>
+        <input
+          type="text"
+          placeholder="Introduce Apellido"
+          name="lastname"
+          #lastname="ngModel"
+          [(ngModel)]="register.lastname"
+          class="form-control"
+          [ngClass]="{'is-valid': lastname.valid, 'is-invalid': lastname.invalid}"
+          required
+        />
+        <div class="alert alert-danger" role="alert" *ngIf="lastname.invalid && (lastname.dirty || lastname.touched)">
+          <div *ngIf="lastname.errors.required">
+            Introduce tu Apellido
+          </div>
+        </div>
+
+        <label><b>Fecha De Nacimiento</b></label>
+        <app-date-picker-legal-age
+          (newDate)="dataAsign($event)"
+        ></app-date-picker-legal-age>
+
+        <label for="email"><b>Email</b></label>
+        <input
+          type="text"
+          placeholder="Introduce Email"
+          name="email"
+          #email="ngModel"
+          [(ngModel)]="register.email"
+          class="form-control"
+          [ngClass]="{'is-valid': email.valid, 'is-invalid': email.invalid}"
+          pattern="^[a-zA-Z0-9.$&*+_~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+          required
+        />
+        <div class="alert alert-danger" role="alert" *ngIf="email.invalid && (email.dirty || email.touched)">
+          <div *ngIf="email.errors.required">
+            Introduce un correo electrónico válido
+          </div>
+          <div *ngIf="email.errors && email.errors.pattern">
+            El correo presenta caracteres no validos
+          </div>
+        </div>
+        <label for="password"><b>Password</b></label>
+        <input
+          type="password"
+          placeholder="Introduce Contraseña"
+          name="password"
+          #password="ngModel"
+          [(ngModel)]="register.password"
+          class="form-control"
+          [ngClass]="{'is-valid': password.valid, 'is-invalid': password.invalid}"
+          required
+        />
+        <div class="alert alert-danger" role="alert" *ngIf="password.invalid && (password.dirty || password.touched)">
+          <div *ngIf="password.errors.required">
+            Introduce una contraseña
+          </div>
+        </div>
+
+        <p>
+          Al hacer click en Registrarse, aceptas
+          <a href="#" style="color: dodgerblue">Terminos Y Condiciones</a>.
+        </p>
+        <p>
+          ¿Ya tiene una cuenta?
+          <a [routerLink]="['/login']" style="color: dodgerblue"
+            >Iniciar sesión</a
+          >.
+        </p>
+        <div class="row">
+          <div class="col-lg">
+            <button type="submit" class="signup-btn" [disabled]="forma.invalid">Registrarse</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-lg"></div>
+  </div>
+</div>
