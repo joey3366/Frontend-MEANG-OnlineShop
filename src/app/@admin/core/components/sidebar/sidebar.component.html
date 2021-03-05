@@ -1,9 +1,27 @@
 <div class="border-right" id="sidebar-wrapper">
-    <div class="sidebar-heading">
-        <a [routerLink]="['/home']" routerLinkActive="router-link-active">MochoGames</a>
-    </div>
-    <div class="list-group list-group-flush">
-        <a [routerLink]="['/admin']" routerLinkActive="router-link-active" class="list-group-item list-group-item-action bg-light"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a [routerLink]="['/admin/users']" routerLinkActive="router-link-active" class="list-group-item list-group-item-action bg-light"><i class="fas fa-users"></i> Users</a>
-    </div>
+  <div class="sidebar-heading">
+    <a [routerLink]="['/home']" routerLinkActive="router-link-active"
+      >SharkGames</a
+    >
+  </div>
+  <div class="list-group list-group-flush">
+    <a
+      [routerLink]="['/admin']"
+      routerLinkActive="router-link-active"
+      class="list-group-item list-group-item-action bg-light"
+      ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+    >
+    <a
+      [routerLink]="['/admin/users']"
+      routerLinkActive="router-link-active"
+      class="list-group-item list-group-item-action bg-light"
+      ><i class="fas fa-users"></i> Usuarios</a
+    >
+    <a
+      [routerLink]="['/admin/genres']"
+      routerLinkActive="router-link-active"
+      class="list-group-item list-group-item-action bg-light"
+      ><i class="fas fa-cubes"></i> Generos</a
+    >
+  </div>
 </div>

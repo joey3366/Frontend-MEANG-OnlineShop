@@ -1,3 +1,4 @@
+import { UsersService } from '@core/services/users.service';
 import { ApiService } from './../../../../../@graphql/services/api.service';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
@@ -9,9 +10,13 @@ import { AuthService } from '@core/services/auth.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private api: ApiService, private auth: AuthService){ }
+  constructor(private api: ApiService, private auth: AuthService, private usersApi: UsersService){ }
 
   ngOnInit(): void {
+    this.usersApi.getUsers(1,1).subscribe(result =>{
+      console.log(result);
+    })
   }
+
 
 }
