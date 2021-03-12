@@ -1,8 +1,12 @@
+import { basicAlert } from '@shared/alerts/toasts';
+import { GenresService } from './genres.service';
 import { ITableColums } from '@core/interfaces/table-colums.interface';
 import { Component, OnInit } from '@angular/core';
 import { IResultData } from '@core/interfaces/result-data.interface';
 import { GENRE_LIST_QUERY } from '@graphql/operations/query/genre';
 import { DocumentNode } from 'graphql';
+import { genreFormBasicDialog, optionsWithDetailsBasic } from '@shared/alerts/alerts';
+import { TYPE_ALERT } from '@shared/alerts/values.config';
 
 @Component({
   selector: 'app-genres',
@@ -17,6 +21,9 @@ export class GenresComponent implements OnInit {
   resultData: IResultData;
   include: boolean;
   columns: Array<ITableColums>
+
+  constructor(private service: GenresService){}
+
   ngOnInit(): void {    
     this.context = {};
     this.itemsPage = 10;
@@ -41,4 +48,89 @@ export class GenresComponent implements OnInit {
     ]
   }
 
+  async takeAction($event){
+    const action = $event[0];
+    const genre = $event[1];
+    const defaultValue = genre.name !== undefined && genre.name !==''? genre.name: '';
+    const html = `<input id="name" value="${defaultValue}" class="swal2-input" required>`;
+    switch (action) {
+      case 'add':
+        this.addForm(html);
+      break;
+      case 'edit':
+        this.updateForm(html, genre)
+      break;
+      case 'info':
+        const result = await optionsWithDetailsBasic('Detalles', `${genre.name} (${genre.slug})`, 400);
+        if (result) {
+          this.updateForm(html, genre);
+        } else if(result === false){
+          this.blockForm(genre);
+        }
+      break;
+      case 'block':
+        this.blockForm(genre)
+      break;
+    
+      default:
+      break;
+    }
+  }
+
+  //Añadir Genero Desde el boton añadir
+  private addGenre(result){
+    if (result.value) {
+      this.service.addGenre(result.value).subscribe((res: any) =>{
+        if (res.status) {
+          basicAlert(TYPE_ALERT.SUCCESS, res.message);
+          return;
+        }
+        basicAlert(TYPE_ALERT.WARNING, res.message)
+      })
+    }
+  }
+
+  //Modificar Genero Desde el icono edit
+  private updateGenre(id: string, result){
+    if (result.value) {
+      this.service.updateGenre(id, result.value).subscribe((res: any) =>{
+        if (res.status) {
+          basicAlert(TYPE_ALERT.SUCCESS, res.message);
+          return;
+        }
+        basicAlert(TYPE_ALERT.WARNING, res.message)
+      })
+    }
+  }
+
+  //Bloquear Genero Desde el icono block
+  private blockGenre(id: string){
+    this.service.blockGenre(id).subscribe((res: any) =>{
+      if (res.status) {
+        basicAlert(TYPE_ALERT.SUCCESS, res.message);
+        return;
+      }
+      basicAlert(TYPE_ALERT.WARNING, res.message)
+    });
+  }
+
+  // Actualizar Genero desde detalles
+  private async updateForm(html: string, genre: any){
+    const result = await genreFormBasicDialog('Modificar genero', html, 'name');
+    this.updateGenre(genre.id, result);
+  }
+
+  //Bloquear genero desde detalles
+  private async blockForm(genre: any){
+    const result = await optionsWithDetailsBasic('¿Bloquear?',`Si bloqueas el item, este no se mostrarà`,400, 'No Bloquear', 'Bloquear');
+    if (result === false) {
+      this.blockGenre(genre.id);
+    }
+  }
+
+  private async addForm(html: string){
+    const result = await genreFormBasicDialog('Añadir genero', html, 'name');
+    this.addGenre(result);
+  }
 }
+

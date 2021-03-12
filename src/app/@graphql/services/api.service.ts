@@ -2,8 +2,6 @@ import { Apollo } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { DocumentNode } from 'graphql';
-import { IRegisterForm } from '@core/interfaces/register.interface';
-import { REGISTER_USER } from '@graphql/operations/mutation/user';
 
 @Injectable({
   providedIn: 'root'
