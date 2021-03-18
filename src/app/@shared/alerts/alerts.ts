@@ -21,6 +21,19 @@ export async function genreFormBasicDialog(title: string, html: string, property
         },
     })
 }
+
+export async function tagFormBasicDialog(title: string, html: string, property: string) {
+    return await swalWhitBasicBasicOptions(title, html).fire({
+        preConfirm: () => {
+            const value = (document.getElementById('name') as HTMLInputElement).value;
+            if (value) {
+                return value;
+            }
+            Swal.showValidationMessage('Añade un tag');
+            return;
+        },
+    })
+}
 export async function userFormBasicDialog(title: string, html: string) {
     return await swalWhitBasicBasicOptions(title, html).fire({
         preConfirm: () => {

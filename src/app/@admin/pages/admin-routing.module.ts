@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './components/admin.component';
-import { AdminGuard } from '@core/guards/admin.guard.ts';
+import { AdminGuard } from '@core/guards/admin.guard.js';
 
 
 const routes: Routes = [
@@ -21,6 +21,10 @@ const routes: Routes = [
       {
         path: 'genres',
         loadChildren: () => import('./genres/genres.module').then(m => m.GenresModule)
+      },
+      {
+        path: 'tags',
+        loadChildren: () => import('./tags/tags.module').then(m => m.TagsModule)
       }
     ]
   }
