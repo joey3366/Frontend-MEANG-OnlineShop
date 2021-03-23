@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { BLOCK_USER, UPDATE_USER } from '@graphql/operations/mutation/user';
+import { ACTIVE_EMAIL_USER, BLOCK_USER, UPDATE_USER } from '@graphql/operations/mutation/user';
 import { ApiService } from '@graphql/services/api.service';
 import { IRegisterForm } from '@core/interfaces/register.interface';
 import { UsersService } from '@core/services/users.service';
@@ -25,9 +25,15 @@ export class UsersAdminService extends ApiService{
     }));
   }
 
-  block(id: string){
-    return this.set(BLOCK_USER, {id}).pipe(map((result: any) =>{
+  unblock(id: string, unblock: boolean = false, admin: boolean = false){
+    return this.set(BLOCK_USER, {id, unblock, admin}).pipe(map((result: any) =>{
       return result.blockUser
     }));
+  }
+
+  sendEmailActive(id: string, email: string){
+    return this.set(ACTIVE_EMAIL_USER, {id, email}).pipe(map((result: any) => {
+      return result.activeUserEmail;
+    }))
   }
 }

@@ -25,7 +25,7 @@ export class TagsComponent implements OnInit {
 
   ngOnInit(): void {    
     this.context = {};
-    this.itemsPage = 20;
+    this.itemsPage = 5;
     this.resultData = {
       listKey: 'tags',
       definitionKey: 'tags'
