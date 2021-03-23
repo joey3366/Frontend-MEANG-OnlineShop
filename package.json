@@ -1,10 +1,6 @@
 {
   "name": "meang-frontend",
-<<<<<<< HEAD
   "version": "0.7.0",
-=======
-  "version": "0.6.0",
->>>>>>> 07-forms-automatic-emails
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

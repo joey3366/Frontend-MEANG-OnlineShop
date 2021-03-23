@@ -1,10 +1,14 @@
+import { ACTIVE_FILTERS } from '@core/constants/filters';
 import { IRegisterForm } from '@core/interfaces/register.interface';
 import { USERS_LIST_QUERY } from '@graphql/operations/query/user';
 import { IResultData } from '@core/interfaces/result-data.interface';
 import { DocumentNode } from 'graphql';
 import { Component, OnInit } from '@angular/core';
 import { ITableColums } from '@core/interfaces/table-colums.interface';
-import { userFormBasicDialog, optionsWithDetailsBasic } from '@shared/alerts/alerts';
+import {
+  userFormBasicDialog,
+  optionsWithDetailsBasic,
+} from '@shared/alerts/alerts';
 import { UsersAdminService } from '../../users-admin.service';
 import { basicAlert } from '@shared/alerts/toasts';
 import { TYPE_ALERT } from '@shared/alerts/values.config';
@@ -21,8 +25,9 @@ export class UsersComponent implements OnInit {
   resultData: IResultData;
   include: boolean;
   columns: Array<ITableColums>;
+  filterActiveValues = ACTIVE_FILTERS.ACTIVE;
 
-  constructor(private adminService: UsersAdminService){}
+  constructor(private adminService: UsersAdminService) {}
 
   ngOnInit(): void {
     this.context = {};
@@ -53,25 +58,34 @@ export class UsersComponent implements OnInit {
         property: 'role',
         label: 'Rol',
       },
+      {
+        property: 'active',
+        label: '¿Activo?',
+      },
     ];
   }
 
-  private initializeForm(user: any){
-    const defaultName = user.name !== undefined && user.name !==''? user.name: '';
-    const defaultLastname = user.lastname !== undefined && user.lastname !==''? user.lastname: '';
-    const defaultEmail = user.email !== undefined && user.email !==''? user.email: '';
+  private initializeForm(user: any) {
+    const defaultName =
+      user.name !== undefined && user.name !== '' ? user.name : '';
+    const defaultLastname =
+      user.lastname !== undefined && user.lastname !== '' ? user.lastname : '';
+    const defaultEmail =
+      user.email !== undefined && user.email !== '' ? user.email : '';
     const roles = new Array(2);
-    roles[0]= user.role !== undefined && user.role ==='ADMIN'? 'selected':'';
-    roles[1]= user.role !== undefined && user.role ==='CLIENT'? 'selected':'';
+    roles[0] =
+      user.role !== undefined && user.role === 'ADMIN' ? 'selected' : '';
+    roles[1] =
+      user.role !== undefined && user.role === 'CLIENT' ? 'selected' : '';
     return `
-    <input id="name" value="${ defaultName }" class="swal2-input" placeholder="Nombre" required>
-    <input id="lastname" value="${ defaultLastname }" class="swal2-input" placeholder="Apellidos" required>
-    <input id="email" value="${ defaultEmail }" class="swal2-input" placeholder="Correo" required>
+    <input id="name" value="${defaultName}" class="swal2-input" placeholder="Nombre" required>
+    <input id="lastname" value="${defaultLastname}" class="swal2-input" placeholder="Apellidos" required>
+    <input id="email" value="${defaultEmail}" class="swal2-input" placeholder="Correo" required>
     <select id="role" class="swal2-input">
       <option value="ADMIN" ${roles[0]}> ADMIN </option>
       <option value="CLIENT" ${roles[1]}> CLIENTE </option>
     </select>
-    `
+    `;
   }
 
   async takeAction($event) {
@@ -85,81 +99,112 @@ export class UsersComponent implements OnInit {
         this.addForm(html);
         break;
       case 'edit':
-        this.updateForm(html, user)
+        this.updateForm(html, user);
         break;
       case 'info':
         const result = await optionsWithDetailsBasic(
           'Detalles',
           `<i class="fas fa-user"></i>&nbsp;&nbsp;${user.name} ${user.lastname}<br/> <i class="fas fa-envelope-open-text"></i>&nbsp;&nbsp; ${user.email}`,
-          400
+          user.active !== false ? 375 : 400,
+          '<i class="fas fa-edit"></i> Editar',
+          user.active !== false
+            ? '<i class="fas fa-lock"></i> Bloquear'
+            : '<i class="fas fa-lock-open"></i> Desbloquear'
         );
         if (result) {
           this.updateForm(html, user);
         } else if (result === false) {
-          this.blockForm(user);
+          this.unblockForm(user, (user.active !== false) ? false : true);
         }
         break;
       case 'block':
-        this.blockForm(user)
+        this.unblockForm(user, false);
         break;
-
+      case 'unblock':
+        this.unblockForm(user, true);
+        break;
       default:
         break;
     }
   }
 
-  private addUser(result){
+  private addUser(result) {
     if (result.value) {
-    const user: IRegisterForm = result.value;
-    user.password = '123456';
-    user.active = false;
-    this.adminService.register(user).subscribe((res: any) =>{
-      if (res.status) {
-        basicAlert(TYPE_ALERT.SUCCESS, res.message);
-        return;
-      }
-      basicAlert(TYPE_ALERT.WARNING, res.message)
-    })
+      const user: IRegisterForm = result.value;
+      user.password = '123456';
+      user.active = false;
+      this.adminService.register(user).subscribe((res: any) => {
+        if (res.status) {
+          basicAlert(TYPE_ALERT.SUCCESS, res.message);
+          this.adminService
+            .sendEmailActive(res.user.id, user.email)
+            .subscribe((resEmail) => {
+              resEmail.status
+                ? basicAlert(TYPE_ALERT.SUCCESS, resEmail.message)
+                : basicAlert(TYPE_ALERT.WARNING, resEmail.message);
+            });
+          return;
+        }
+        basicAlert(TYPE_ALERT.WARNING, res.message);
+      });
     }
   }
-  private updateUser(result, id: string){
+  private updateUser(result, id: string) {
     if (result.value) {
       const user = result.value;
       user.id = id;
-      this.adminService.update(result.value).subscribe((res: any) =>{
-      if (res.status) {
-        basicAlert(TYPE_ALERT.SUCCESS, res.message);
-        return;
-      }
-      basicAlert(TYPE_ALERT.WARNING, res.message)
-    })
+      this.adminService.update(result.value).subscribe((res: any) => {
+        if (res.status) {
+          basicAlert(TYPE_ALERT.SUCCESS, res.message);
+          return;
+        }
+        basicAlert(TYPE_ALERT.WARNING, res.message);
+      });
     }
   }
 
-  private blockUser(id: string){
-    this.adminService.block(id).subscribe((res: any) =>{
+  private unblockUser(
+    id: string,
+    unblock: boolean = false,
+    admin: boolean = false
+  ) {
+    this.adminService.unblock(id, unblock, admin).subscribe((res: any) => {
       if (res.status) {
         basicAlert(TYPE_ALERT.SUCCESS, res.message);
         return;
       }
-      basicAlert(TYPE_ALERT.WARNING, res.message)
+      basicAlert(TYPE_ALERT.WARNING, res.message);
     });
   }
 
-  private async updateForm(html: string, user:any){
+  private async updateForm(html: string, user: any) {
     const result = await userFormBasicDialog('Modificar Usuario', html);
-    this.updateUser(result, user.id)
+    this.updateUser(result, user.id);
   }
 
-  private async addForm(html: string){
+  private async addForm(html: string) {
     const result = await userFormBasicDialog('Añadir Usuario', html);
     this.addUser(result);
   }
 
-  private async blockForm(user: any){
-    const result = await optionsWithDetailsBasic('¿Bloquear?',`Si bloqueas el item, este no se mostrarà`,400, 'No Bloquear', 'Bloquear');
+  private async unblockForm(user: any, unblock: boolean) {
+    const result = unblock
+      ? await optionsWithDetailsBasic(
+          'Desbloquear?',
+          `Si desbloqueas este usuario, podra hacer compras `,
+          460,
+          'No Desbloquear',
+          'Desbloquear'
+        )
+      : await optionsWithDetailsBasic(
+          'Bloquear?',
+          `Si Bloqueas este usuario, No podra hacer compras `,
+          400,
+          'No Bloquear',
+          'Bloquear'
+        );
     if (result === false) {
-      this.blockUser(user.id);
+      this.unblockUser(user.id, unblock, true);
     }
   }
 }
