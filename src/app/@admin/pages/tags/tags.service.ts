@@ -29,8 +29,8 @@ export class TagsService extends ApiService {
     );
   }
 
-  blockTag(id: string) {
-    return this.set(BLOCK_TAG, { id }, {}).pipe(
+  unblockTag(id: string, unblock: boolean) {
+    return this.set(BLOCK_TAG, { id, unblock }, {}).pipe(
       map((result: any) => {
         return result.blockTag;
       })
