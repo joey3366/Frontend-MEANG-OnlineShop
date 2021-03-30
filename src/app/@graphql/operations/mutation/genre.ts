@@ -28,8 +28,8 @@ export const MODIFY_GENRE = gql`
 `;
 
 export const BLOCK_GENRE = gql`
-  mutation BloquearGenero($id: ID!) {
-        blockGenre(id: $id){
+  mutation BloquearGenero($id: ID!, $unblock: Boolean) {
+        blockGenre(id: $id, unblock: $unblock){
             status
             message
         }

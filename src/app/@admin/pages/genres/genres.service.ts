@@ -28,8 +28,8 @@ export class GenresService extends ApiService {
     );
   }
 
-  blockGenre(id: string) {
-    return this.set(BLOCK_GENRE, { id }, {}).pipe(
+  unblockGenre(id: string, unblock: boolean) {
+    return this.set(BLOCK_GENRE, { id, unblock }, {}).pipe(
       map((result: any) => {
         return result.blockGenre;
       })
