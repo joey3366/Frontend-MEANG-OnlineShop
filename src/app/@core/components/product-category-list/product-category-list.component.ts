@@ -10,6 +10,7 @@ export class ProductCategoryListComponent implements OnInit {
 
   @Input() title = 'Titulo De La Categoria'
   @Input() productsList: Array<IProduct> = []
+  @Input() description = '';
   constructor() { }
 
   ngOnInit(): void {

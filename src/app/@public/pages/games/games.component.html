@@ -1,0 +1,32 @@
+<div class="container-fluid" *ngIf="infoPage && !loading">
+<app-product-category-list
+  [title]="gamesPageInfo.title"
+  [productsList]="productsList"
+  [description]="gamesPageInfo.description"
+></app-product-category-list>
+<div class="d-flex justify-content-between p-2">
+  <ngb-pagination
+    [collectionSize]="infoPage.total"
+    [(page)]="selectPage"
+    (pageChange)="loadData()"
+    [pageSize]="infoPage.itemsPage"
+    [maxSize]="9"
+    [rotate]="false"
+    [boundaryLinks]="true"
+  >
+  </ngb-pagination>
+
+  <select
+    class="custom-select"
+    style="width: auto"
+    [(ngModel)]="infoPage.itemsPage"
+    (ngModelChange)="loadData()"
+  >
+    <option [ngValue]="8">8 items por página</option>
+    <option [ngValue]="16">16 items por página</option>
+    <option [ngValue]="24">24 items por página</option>
+  </select>
+</div>
+
+</div>
+

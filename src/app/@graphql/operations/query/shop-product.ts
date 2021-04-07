@@ -9,16 +9,18 @@ export const SHOP_LAST_UNITS_OFFERS = gql`
     $random: Boolean
     $topPrice: Float
     $lastUnits: Int
+    $showInfo: Boolean = false
+    $showPlatform: Boolean = false
   ) {
     shopProductsOffersLast(
       page: $page
       itemsPage: $itemsPage
       active: $active
-      random: $random
       topPrice: $topPrice
       lastUnits: $lastUnits
+      random: $random
     ) {
-      info {
+      info @include(if: $showInfo) {
         ...ResultInfoObject
       }
       status
@@ -38,7 +40,9 @@ export const SHOP_PRODUCT_BY_PLATFORM = gql`
     $itemsPage: Int
     $active: ActiveFilterEnum
     $random: Boolean
-    $platform: ID!
+    $platform: [ID!]!
+    $showInfo: Boolean = false
+    $showPlatform: Boolean = false
   ) {
     shopProductsPlatforms(
       page: $page
@@ -47,6 +51,9 @@ export const SHOP_PRODUCT_BY_PLATFORM = gql`
       random: $random
       platform: $platform
     ) {
+      info @include(if: $showInfo) {
+        ...ResultInfoObject
+      }
       status
       message
       shopProducts {
@@ -55,4 +62,5 @@ export const SHOP_PRODUCT_BY_PLATFORM = gql`
     }
   }
   ${SHOP_PRODUCT_FRAGMENT}
+  ${RESULT_INFO_FRAGMENT}
 `;

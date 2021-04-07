@@ -6,6 +6,7 @@ import { DocumentNode } from 'graphql';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { map } from 'rxjs/internal/operators/map';
 import { Observable } from 'rxjs/internal/Observable';
+import { closeAlert, loadData } from '@shared/alerts/alerts';
 
 @Component({
   selector: 'app-table-pagination',
@@ -24,7 +25,7 @@ export class TablePaginationComponent implements OnInit {
   @Output() manageItem = new EventEmitter<Array<any>>();
   infoPage: IInfoPage;
   data$: Observable<any>;
-
+  loading: boolean;
   constructor(private service: TablePaginationService) { }
 
   ngOnInit(): void {
@@ -47,6 +48,8 @@ export class TablePaginationComponent implements OnInit {
     this.loadData();
   }
   loadData(){
+    this.loading = true;
+    loadData('Cargando los datos', 'Espera un instante');
     const variables = {
       page: this.infoPage.page,
       itemsPage: this.infoPage.itemsPage,
@@ -57,6 +60,8 @@ export class TablePaginationComponent implements OnInit {
       const data = result[this.resultData.definitionKey];
       this.infoPage.pages = data.info.pages;
       this.infoPage.total = data.info.total;
+      this.loading = false;
+      closeAlert();
       return data[this.resultData.listKey]
     }));
     
