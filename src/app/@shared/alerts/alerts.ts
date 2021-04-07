@@ -91,3 +91,17 @@ export async function optionsWithDetailsBasic(title: string, html: string, width
         }
     })
 }
+
+export const loadData = (title: string, html: string) => {
+    Swal.fire({
+      title,
+      html,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+}
+
+export const closeAlert = () => {
+    Swal.close()
+}

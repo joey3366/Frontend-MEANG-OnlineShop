@@ -12,8 +12,7 @@ export const SHOP_PRODUCT_FRAGMENT = gql`
         count
       }
     }
-    platformId
-    platform {
+    platform @include(if: $showPlatform){
       id
       name
       slug

@@ -1,0 +1,22 @@
+[
+    {
+        "url": "/admin",
+        "label": "Dashboard",
+        "icon": "fas fa-tachometer-alt"
+    },
+    {
+        "url": "/admin/users",
+        "label": "Usuarios",
+        "icon": "fas fa-users"
+    },
+    {
+        "url": "/admin/genres",
+        "label": "Géneros",
+        "icon": "fas fa-project-diagram"
+    },
+    {
+        "url": "/admin/tags",
+        "label": "Tags",
+        "icon": "fas fa-tags"
+    }
+]

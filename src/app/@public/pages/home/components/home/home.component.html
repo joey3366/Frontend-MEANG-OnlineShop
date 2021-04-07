@@ -1,4 +1,6 @@
-<shop-carousel-items [items]="items"></shop-carousel-items>
-<app-product-category-list [title]="'Juegos Play Station 4'" [productsList]="listOne"></app-product-category-list>
-<app-product-category-list [title]="'Juegos Mas Economicos'" [productsList]="listTwo"></app-product-category-list>
-<app-product-category-list [title]="'Juegos PC'" [productsList]="listThree"></app-product-category-list>
+<div class="container-fluid" *ngIf="!loading">
+    <shop-carousel-items [items]="items"></shop-carousel-items>
+    <app-product-category-list [title]="'Juegos Play Station 4'" [productsList]="listOne"></app-product-category-list>
+    <app-product-category-list [title]="'Juegos Mas Economicos'" [productsList]="listTwo"></app-product-category-list>
+    <app-product-category-list [title]="'Juegos PC'" [productsList]="listThree"></app-product-category-list>
+</div>

@@ -1,3 +1,4 @@
+import { HOME_PAGE } from '@graphql/operations/query/home-page';
 import { SHOP_PRODUCT_BY_PLATFORM } from './../../@graphql/operations/query/shop-product';
 import { ACTIVE_FILTERS } from './../constants/filters';
 import { Injectable } from '@angular/core';
@@ -14,13 +15,25 @@ export class ProductsService extends ApiService {
   constructor(apollo: Apollo) {
     super(apollo);
   }
+  getHomePage(){
+    return this.get(HOME_PAGE, { showPlatform: true}).pipe(map((result: any) => {
+      return {
+        carousel: result.carousel,
+        ps4: this.manageInfo(result.ps4.shopProducts, false),
+        pc: this.manageInfo(result.pc.shopProducts, false),
+        topPrice: this.manageInfo(result.topPrice35.shopProducts, true)
+      }
+    }))
+  }
 
   getByPlatform(
     page: number = 1,
     itemsPage: number = 10,
     active: ACTIVE_FILTERS = ACTIVE_FILTERS.ACTIVE,
     random: boolean = false,
-    platform: string
+    platform: Array<string> = ['-1'],
+    showInfo: boolean = false,
+    showPlatform: boolean = false
   ) {
     return this.get(SHOP_PRODUCT_BY_PLATFORM, {
       page,
@@ -28,9 +41,15 @@ export class ProductsService extends ApiService {
       active,
       random,
       platform,
+      showInfo,
+      showPlatform
     }).pipe(
       map((result: any) => {
-        return this.manageInfo(result.shopProductsPlatforms.shopProducts);
+        const data = result.shopProductsPlatforms;
+        return {
+          info: data.info,
+          result: this.manageInfo(data.shopProducts)
+        }
       })
     );
   }
@@ -41,7 +60,9 @@ export class ProductsService extends ApiService {
     active: ACTIVE_FILTERS = ACTIVE_FILTERS.ACTIVE,
     random: boolean = false,
     topPrice: number = -1,
-    lastUnits: number = -1
+    lastUnits: number = -1,
+    showInfo: boolean = false,
+    showPlatform: boolean = false
   ) {
     return this.get(SHOP_LAST_UNITS_OFFERS, {
       page,
@@ -50,14 +71,20 @@ export class ProductsService extends ApiService {
       random,
       topPrice,
       lastUnits,
+      showInfo,
+      showPlatform
     }).pipe(
       map((result: any) => {
-        return this.manageInfo(result.shopProductsOffersLast.shopProducts);
+        const data = result.shopProductsOffersLast;
+        return{
+          info: data.info,
+          result: this.manageInfo(data.shopProducts)
+        }
       })
     );
   }
 
-  private manageInfo(listProducts) {
+  private manageInfo(listProducts, showDescription = true) {
     const resultList: Array<IProduct> = [];
     listProducts.map((shopObject) => {
       resultList.push({
@@ -65,7 +92,7 @@ export class ProductsService extends ApiService {
         img: shopObject.product.img,
         name: shopObject.product.name,
         rating: shopObject.product.rating,
-        description: '',
+        description: (shopObject.platform && showDescription) ? shopObject.platform.name : '',
         qty: 1,
         price: shopObject.price,
         stock: shopObject.stock,

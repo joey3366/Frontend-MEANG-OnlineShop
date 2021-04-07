@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { IMenuItem } from '@core/interfaces/menu-item.interface';
+import adminMenuItems from '@data/menus/admin.json';
 
 @Component({
   selector: 'app-admin-sidebar',
@@ -7,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SidebarComponent implements OnInit {
 
+  menuItems: Array<IMenuItem> = adminMenuItems
   constructor() { }
 
   ngOnInit(): void {

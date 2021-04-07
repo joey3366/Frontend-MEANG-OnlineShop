@@ -1,10 +1,9 @@
+import { loadData, closeAlert } from './../../../../../@shared/alerts/alerts';
+import { map } from 'rxjs/internal/operators/map';
 import { Component, OnInit } from '@angular/core';
 import { ICarouselItem } from '@mugan86/ng-shop-ui/lib/interfaces/carousel-item.interface';
-import carouselItems from '@data/carousel.json';
-import productsList from '@data/products.json';
 import { IProduct } from '@mugan86/ng-shop-ui/lib/interfaces/product.interface';
 import { ProductsService } from '@core/services/products.service';
-import { ACTIVE_FILTERS } from '@core/constants/filters';
 
 @Component({
   selector: 'app-home',
@@ -17,40 +16,20 @@ export class HomeComponent implements OnInit {
   listOne;
   listTwo;
   listThree;
+  loading: boolean
   constructor(private productService: ProductsService) {}
 
   ngOnInit(): void {
-    
-    this.productService
-      .getByPlatform(1, 4, ACTIVE_FILTERS.ACTIVE, true, '18')
-      .subscribe((result) => {
-        this.listOne = result;
-    });
-
-    this.productService
-     .getByLastUnitsOffers(1, 4, ACTIVE_FILTERS.ACTIVE, true, 40)
-      .subscribe((result) => {
-        this.listTwo = result;
-      });
-    this.productService
-      .getByPlatform(1, 4, ACTIVE_FILTERS.ACTIVE, true, '4')
-      .subscribe((result) => {
-        this.listThree = result;
-      });
-    this.productService
-      .getByLastUnitsOffers(1, 5, ACTIVE_FILTERS.ACTIVE, true, -1, 20)
-      .subscribe((result: IProduct[]) => {
-        result.map((item: IProduct) => {
-          this.items.push({
-            id: item.id,
-            title: item.name,
-            description: item.description,
-            background: item.img,
-            url: '',
-          });
-        });
-      });
-    this.productsList = productsList;
+    this.loading = true
+    loadData('Cargando', 'Espera Por Favor')
+    this.productService.getHomePage().subscribe(data => {
+      this.listOne = data.ps4;
+      this.listTwo = data .topPrice;
+      this.listThree = data.pc;
+      this.items = this.manageCarousel(data.carousel)
+      closeAlert()
+      this.loading = false
+    })
   }
 
   addToCart($event: IProduct) {
@@ -59,5 +38,19 @@ export class HomeComponent implements OnInit {
 
   showProductDetails($event: IProduct) {
     console.log('Que inventa locota');
+  }
+
+  private manageCarousel(list){
+    const itemsValues: Array<ICarouselItem> = [];
+    list.shopProducts.map((item) => {
+      itemsValues.push({
+        id: item.id,
+        title: item.product.name,
+        description: item.platform.name,
+        background: item.product.img,
+        url: ''
+      });
+    });
+    return itemsValues;
   }
 }
