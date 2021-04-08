@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import { IProduct } from '@mugan86/ng-shop-ui/lib/interfaces/product.interface';
 
@@ -11,7 +12,7 @@ export class ProductCategoryListComponent implements OnInit {
   @Input() title = 'Titulo De La Categoria'
   @Input() productsList: Array<IProduct> = []
   @Input() description = '';
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -21,7 +22,7 @@ export class ProductCategoryListComponent implements OnInit {
   }
 
   showProductDetails($event: IProduct){
-    console.log('Que inventa locota')
+    this.router.navigate(['/games/details', + $event.id]);
   }
 
 }

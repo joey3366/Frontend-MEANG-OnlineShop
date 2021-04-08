@@ -1,5 +1,10 @@
+import { DETAILS_PAGE } from './../../@graphql/operations/query/details-page';
 import { HOME_PAGE } from '@graphql/operations/query/home-page';
-import { SHOP_PRODUCT_BY_PLATFORM } from './../../@graphql/operations/query/shop-product';
+import {
+  SHOP_PRODUCT_BY_PLATFORM,
+  SHOP_PRODUCT_DETAILS,
+  SHOP_PRODUCT_RANDOM_ITEMS,
+} from './../../@graphql/operations/query/shop-product';
 import { ACTIVE_FILTERS } from './../constants/filters';
 import { Injectable } from '@angular/core';
 import { ApiService } from '@graphql/services/api.service';
@@ -15,15 +20,17 @@ export class ProductsService extends ApiService {
   constructor(apollo: Apollo) {
     super(apollo);
   }
-  getHomePage(){
-    return this.get(HOME_PAGE, { showPlatform: true}).pipe(map((result: any) => {
-      return {
-        carousel: result.carousel,
-        ps4: this.manageInfo(result.ps4.shopProducts, false),
-        pc: this.manageInfo(result.pc.shopProducts, false),
-        topPrice: this.manageInfo(result.topPrice35.shopProducts, true)
-      }
-    }))
+  getHomePage() {
+    return this.get(HOME_PAGE, { showPlatform: true }).pipe(
+      map((result: any) => {
+        return {
+          carousel: result.carousel,
+          ps4: this.manageInfo(result.ps4.shopProducts, false),
+          pc: this.manageInfo(result.pc.shopProducts, false),
+          topPrice: this.manageInfo(result.topPrice35.shopProducts, true),
+        };
+      })
+    );
   }
 
   getByPlatform(
@@ -42,14 +49,14 @@ export class ProductsService extends ApiService {
       random,
       platform,
       showInfo,
-      showPlatform
+      showPlatform,
     }).pipe(
       map((result: any) => {
         const data = result.shopProductsPlatforms;
         return {
           info: data.info,
-          result: this.manageInfo(data.shopProducts)
-        }
+          result: this.manageInfo(data.shopProducts),
+        };
       })
     );
   }
@@ -72,32 +79,60 @@ export class ProductsService extends ApiService {
       topPrice,
       lastUnits,
       showInfo,
-      showPlatform
+      showPlatform,
     }).pipe(
       map((result: any) => {
         const data = result.shopProductsOffersLast;
-        return{
+        return {
           info: data.info,
-          result: this.manageInfo(data.shopProducts)
-        }
+          result: this.manageInfo(data.shopProducts),
+        };
       })
     );
   }
 
-  private manageInfo(listProducts, showDescription = true) {
+  private manageInfo(listProducts: any, showDescription = true) {
     const resultList: Array<IProduct> = [];
     listProducts.map((shopObject) => {
-      resultList.push({
-        id: shopObject.id,
-        img: shopObject.product.img,
-        name: shopObject.product.name,
-        rating: shopObject.product.rating,
-        description: (shopObject.platform && showDescription) ? shopObject.platform.name : '',
-        qty: 1,
-        price: shopObject.price,
-        stock: shopObject.stock,
-      });
+      resultList.push(this.setInObject(shopObject, showDescription));
     });
     return resultList;
+  }
+
+  getItem(id: number) {
+    return this.get(DETAILS_PAGE, { id }, { }, false).pipe(
+      map((result: any) => {
+        const details = result.details;
+        const randomItems = result.randomItems;
+        return {
+          product: this.setInObject(details.shopProduct, true),
+          screens: details.shopProduct.product.screenshoot,
+          relational: details.shopProduct.relationalProducts,
+          random: this.manageInfo(randomItems.shopProducts, true),
+        };
+      })
+    );
+  }
+
+  private setInObject(shopObject, showDescription) {
+    return {
+      id: shopObject.id,
+      img: shopObject.product.img,
+      name: shopObject.product.name,
+      rating: shopObject.product.rating,
+      description: (shopObject.platform && showDescription) ? shopObject.platform.name : '',
+      qty: 1,
+      price: shopObject.price,
+      stock: shopObject.stock,
+    };
+  }
+
+  getRandomItems() {
+    return this.get(SHOP_PRODUCT_RANDOM_ITEMS).pipe(
+      map((result: any) => {
+        const data = result.randomItems.shopProducts;
+        return this.manageInfo(data, true);
+      })
+    );
   }
 }
