@@ -1,3 +1,4 @@
+import { CartService } from './../../services/cart-service.service';
 import { IMeData } from '@core/interfaces/session.interface';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
@@ -15,7 +16,7 @@ export class NavbarComponent implements OnInit {
   access = false;
   role: string;
   userLabel = '';
-  constructor(private auth: AuthService) {
+  constructor(private auth: AuthService, private cartService: CartService) {
     this.auth.accessVar$.subscribe((result) => {
       this.session = result;
       this.access = this.session.status;
@@ -29,6 +30,10 @@ export class NavbarComponent implements OnInit {
 
   logout(){
     this.auth.resetSession();
+  }
+
+  open(){
+    this.cartService.openNav();
   }
 
 }
