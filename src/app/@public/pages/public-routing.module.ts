@@ -44,6 +44,10 @@ const routes: Routes = [
         path: 'games/:type/:filter',
         loadChildren: () => import('./games/games.module').then(m => m.GamesModule)
       },
+      {
+        path: 'checkout',
+        loadChildren: () => import('./forms/checkout/checkout.module').then(m => m.CheckoutModule)
+      }
     ]
   }
 ];

@@ -73,7 +73,7 @@
         <a
           (click)="open()"
           class="nav-link"
-          ><i class="fas fa-shopping-cart"></i></a
+          ><i class="fas fa-shopping-cart"></i><span class="badge badge-success notification" *ngIf="cartItemsTotal > 0">{{cartItemsTotal}}</span></a
         >
       </li>
     </ul>
