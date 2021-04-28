@@ -11,5 +11,6 @@ export const USER_FRAGMENT = gql`
         birthDay @include(if: $include)
         role
         active
+        stripeCustomer
     }
 `;

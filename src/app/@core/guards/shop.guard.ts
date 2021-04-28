@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
-  CanActivateChild,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Router,
+  CanActivate,
 } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 
@@ -12,20 +12,19 @@ import jwt_decode from 'jwt-decode';
 @Injectable({
   providedIn: 'root',
 })
-export class AdminGuard implements CanActivateChild {
+export class ShopGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
-  canActivateChild(
+  canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
     if (this.auth.getSession() !== null) {
-      const dataDecode: any = this.decodeToken();;
+      const dataDecode: any = this.decodeToken();
+      console.log(dataDecode);
       if (dataDecode.exp < new Date().getTime() / 1000) {
         return this.redirect();
       }
-      if (dataDecode.user.role === 'ADMIN') {
-        return true;
-      }
+      return true;
     }
     return this.redirect();
   }

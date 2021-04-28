@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  stripePublicKey: 'pk_test_51IgYzCG7Bj0oKIqBlIYzxvuPfj7kLYMGY8zzdoCNvY0G8H8mH6gmkJXsdFHosasWy6kPfEWxPA4RhsnyD18nDnYZ00Uug72Voz'
 };
 
 /*

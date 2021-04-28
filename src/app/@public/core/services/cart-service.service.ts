@@ -85,6 +85,14 @@ export class CartService {
     return this.cart;
   }
 
+  orderDescription(){
+    let description = '';
+    this.cart.products.map((product: IProduct) => {
+      description += `${product.name} (${product.description}) X ${product.qty}\n`;
+    })
+    return description;
+  }
+
   private setInfo(){
     localStorage.setItem('cart', JSON.stringify(this.cart));
     this.updateItemsInCart(this.cart);
