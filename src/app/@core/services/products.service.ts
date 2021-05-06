@@ -1,10 +1,10 @@
-import { DETAILS_PAGE } from './../../@graphql/operations/query/details-page';
+import { DETAILS_PAGE } from '@graphql/operations/query/details-page';
 import { HOME_PAGE } from '@graphql/operations/query/home-page';
 import {
   SHOP_PRODUCT_BY_PLATFORM,
   SHOP_PRODUCT_DETAILS,
   SHOP_PRODUCT_RANDOM_ITEMS,
-} from './../../@graphql/operations/query/shop-product';
+} from '@graphql/operations/query/shop-product';
 import { ACTIVE_FILTERS } from './../constants/filters';
 import { Injectable } from '@angular/core';
 import { ApiService } from '@graphql/services/api.service';
@@ -12,6 +12,7 @@ import { Apollo } from 'apollo-angular';
 import { SHOP_LAST_UNITS_OFFERS } from '@graphql/operations/query/shop-product';
 import { map } from 'rxjs/internal/operators/map';
 import { IProduct } from '@mugan86/ng-shop-ui/lib/interfaces/product.interface';
+import { SUBSCRIPTIONS_PRODUCT_SELECT_STOCK } from '@graphql/operations/subscription/shop-product';
 
 @Injectable({
   providedIn: 'root',
@@ -134,5 +135,11 @@ export class ProductsService extends ApiService {
         return this.manageInfo(data, true);
       })
     );
+  }
+
+  stockUpdateListener(id: number){
+    return this.subscription(SUBSCRIPTIONS_PRODUCT_SELECT_STOCK, { id }).pipe(map((result: any) => {
+      return result.selectProductStockUpdate
+    }));
   }
 }

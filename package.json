@@ -30,6 +30,7 @@
     "apollo-client": "^2.6.8",
     "apollo-link": "^1.2.14",
     "apollo-link-error": "^1.1.13",
+    "apollo-link-ws": "^1.0.20",
     "bootstrap": "^4.5.3",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.10.3",
@@ -37,6 +38,7 @@
     "jwt-decode": "^3.1.2",
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",
+    "subscriptions-transport-ws": "^0.9.18",
     "sweetalert2": "^10.15.3",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

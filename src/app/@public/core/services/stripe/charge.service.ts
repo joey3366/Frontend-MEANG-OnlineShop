@@ -5,6 +5,7 @@ import { ApiService } from '@graphql/services/api.service';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { CHARGES_CUSTOMER_LIST } from '@graphql/operations/query/stripe/charge';
+import { IStock } from '@core/interfaces/stock.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,8 @@ export class ChargeService extends ApiService {
     super(apollo);
   }
 
-  pay(payment: IPayment) {
-    return this.set(CREATE_PAY_ORDER, { payment }).pipe(
+  pay(payment: IPayment, stockChange: Array<IStock>) {
+    return this.set(CREATE_PAY_ORDER, { payment, stockChange }).pipe(
       map((result: any) => {
         return result.chargeOrder;
       })
