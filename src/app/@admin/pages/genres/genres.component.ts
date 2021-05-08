@@ -11,6 +11,8 @@ import {
   optionsWithDetailsBasic,
 } from '@shared/alerts/alerts';
 import { TYPE_ALERT } from '@shared/alerts/values.config';
+import { TitleService } from '@admin/core/services/title.service';
+import { LABEL } from '@admin/core/constants/title.constants';
 
 @Component({
   selector: 'app-genres',
@@ -26,9 +28,10 @@ export class GenresComponent implements OnInit {
   columns: Array<ITableColums>;
   filterActiveValues = ACTIVE_FILTERS.ACTIVE;
 
-  constructor(private service: GenresService) {}
+  constructor(private service: GenresService, private titleService: TitleService) {}
 
   ngOnInit(): void {
+    this.titleService.updateTitle(LABEL.GENRES)
     this.context = {};
     this.itemsPage = 10;
     this.resultData = {

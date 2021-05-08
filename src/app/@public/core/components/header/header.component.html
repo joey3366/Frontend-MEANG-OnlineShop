@@ -3,13 +3,15 @@
         <div>
             <img class="logotipe" src="/assets/img/logos/logo.png" alt="">
         </div>
-        <div>
-            <p>Joey523-@hotmail.com</p>
+        <div class="flex">
+            <span class="delivery">&nbsp;<i class="fas fa-dollar-sign"></i> ¡¡ENVIOS GRATIS!!</span>
         </div>
         <div class="d-flex flex-row-reverse">
-            <a class="nav-link" href="#">Link 1</a>
-            <a class="nav-link" href="#">Link 2</a>
-            <a class="nav-link" href="#">Link 3</a>
+            <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                <li class="nav-item faq">
+                    <a class="nav-link" [routerLink]="['/faq']" routerLinkActive="router-link-active" ><i class="fas fa-question"></i><span> Preguntas Frecuentes</span></a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

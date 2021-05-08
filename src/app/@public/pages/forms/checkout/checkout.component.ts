@@ -98,6 +98,7 @@ export class CheckoutComponent implements OnInit {
                   this.cartService.clear();
                   return;
                 } else {
+                  console.log(result)
                   await infoEventAlert(
                     'Pedido No pagado',
                     'Intentelo de nuevo',

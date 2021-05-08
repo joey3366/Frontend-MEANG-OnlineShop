@@ -1,0 +1,19 @@
+<div class="container">
+    <h1>Preguntas Frecuentes</h1>
+    <p>Aqui encontraras respuestas a tus inquietudes</p>
+    <ngb-accordion [closeOthers]="true" activeIds="static-1">
+        <ngb-panel id="static-1" title="¿Que metodos de pago existen?">
+          <ng-template ngbPanelContent>
+            Se puede pagar mediante tarjeta de credito
+          </ng-template>
+        </ngb-panel>
+        <ngb-panel id="static-2">
+          <ng-template ngbPanelTitle>
+            <span>¿ Como se tratan los envios? </span>
+          </ng-template>
+          <ng-template ngbPanelContent>
+            Los envios corren por parte de SharkGames y son totalmente gratuitos
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+</div>
