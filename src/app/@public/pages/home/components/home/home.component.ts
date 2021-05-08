@@ -1,5 +1,4 @@
-import { loadData, closeAlert } from './../../../../../@shared/alerts/alerts';
-import { map } from 'rxjs/internal/operators/map';
+import { loadData, closeAlert } from '@shared/alerts/alerts';
 import { Component, OnInit } from '@angular/core';
 import { ICarouselItem } from '@mugan86/ng-shop-ui/lib/interfaces/carousel-item.interface';
 import { IProduct } from '@mugan86/ng-shop-ui/lib/interfaces/product.interface';

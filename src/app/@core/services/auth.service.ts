@@ -8,6 +8,8 @@ import { HttpHeaders } from '@angular/common/http';
 import { IMeData, ISession } from '@core/interfaces/session.interface';
 import { Subject } from 'rxjs';
 import { Observable } from 'apollo-link';
+import { optionsWithDetailsBasic } from '@shared/alerts/alerts';
+import { REDIRECT_ROUTES } from '@core/constants/config';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +55,14 @@ export class AuthService extends ApiService {
     return JSON.parse(localStorage.getItem('session'));
   }
 
-  resetSession(){
+  async resetSession(routesUrl: string = ''){
+    const result = await optionsWithDetailsBasic('Cerrar Sesion', '¿Estas seguro que quieres cerrar sesion?', 480, 'Si, cerrar', 'No' );
+    if (!result) {
+      return;
+    }
+    if (REDIRECT_ROUTES.includes(routesUrl)) {
+      localStorage.setItem('route_after_login', routesUrl)
+    }
     localStorage.removeItem('session');
     this.updateSession({ status: false });
   }

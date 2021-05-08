@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
 import shopMenuItems from '@data/menus/shop.json';
 import { IMenuItem } from '@core/interfaces/menu-item.interface';
+import { optionsWithDetailsBasic } from '@shared/alerts/alerts';
 
 @Component({
   selector: 'app-navbar',
@@ -38,11 +39,8 @@ export class NavbarComponent implements OnInit {
     this.cartItemsTotal = this.cartService.initialize().subtotal
   }
 
-  logout(){
-    if (REDIRECT_ROUTES.includes(this.router.url)) {
-      localStorage.setItem('route_after_login', this.router.url)
-    }
-    this.auth.resetSession();
+  async logout(){
+    this.auth.resetSession(this.router.url);
   }
 
   open(){

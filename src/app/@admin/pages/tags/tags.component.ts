@@ -11,6 +11,8 @@ import { basicAlert } from '@shared/alerts/toasts';
 import { TYPE_ALERT } from '@shared/alerts/values.config';
 import { DocumentNode } from 'graphql';
 import { TagsService } from './tags.service';
+import { TitleService } from '@admin/core/services/title.service';
+import { LABEL } from '@admin/core/constants/title.constants';
 
 @Component({
   selector: 'app-tags',
@@ -26,9 +28,10 @@ export class TagsComponent implements OnInit {
   columns: Array<ITableColums>;
   filterActiveValues = ACTIVE_FILTERS.ACTIVE;
 
-  constructor(private service: TagsService) {}
+  constructor(private service: TagsService, private titleService: TitleService) {}
 
   ngOnInit(): void {
+    this.titleService.updateTitle(LABEL.TAGS)
     this.context = {};
     this.itemsPage = 5;
     this.resultData = {

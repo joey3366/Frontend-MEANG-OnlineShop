@@ -1,3 +1,4 @@
+import { TitleService } from './../../services/title.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,7 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TitleComponent implements OnInit {
 
-  constructor() { }
+  title: string;
+  constructor( private titleService: TitleService) {
+    this.titleService.title$.subscribe((title: string) => {
+      this.title = title
+    })
+   }
 
   ngOnInit(): void {
   }
